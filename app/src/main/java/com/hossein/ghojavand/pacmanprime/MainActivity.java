@@ -1,0 +1,256 @@
+package com.hossein.ghojavand.pacmanprime;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import android.os.Build;
+import android.os.Bundle;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.google.android.material.bottomappbar.BottomAppBar;
+import com.hossein.ghojavand.pacmanprime.model.Board;
+import com.hossein.ghojavand.pacmanprime.model.Cell;
+import com.hossein.ghojavand.pacmanprime.model.PacMan;
+
+import org.w3c.dom.Text;
+
+import java.util.logging.Level;
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+
+    private LinearLayout board_layout;
+    private RelativeLayout up_btn , left_btn , right_btn , bottom_btn;
+    private TextView my_score_tv;
+
+    private final int UP = 1 , RIGHT = 2 , BOTTOM = 3 , LEFT = 4;
+
+    private PacMan me ;
+    private Board board;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            Window window = this.getWindow();
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+            window.setStatusBarColor(ContextCompat.getColor(this, R.color.background));
+            window.setNavigationBarColor(ContextCompat.getColor(this, R.color.background));
+        }
+
+
+        init();
+        up_btn.setOnClickListener(this);
+        left_btn.setOnClickListener(this);
+        right_btn.setOnClickListener(this);
+        bottom_btn.setOnClickListener(this);
+
+    }
+
+    private void init() {
+        up_btn = findViewById(R.id.up_btn);
+        left_btn = findViewById(R.id.left_btn);
+        right_btn = findViewById(R.id.right_btn);
+        bottom_btn = findViewById(R.id.bottom_btn);
+        my_score_tv = findViewById(R.id.my_score_tv);
+
+        me = new PacMan(11 , 0);
+
+        board = new Board();
+
+
+
+
+        imageViewInitializer();
+    }
+
+    public void update_score()
+    {
+        String score = String.valueOf(me.score);
+        my_score_tv.setText(score);
+    }
+
+    private void imageViewInitializer() {
+        int ID ;
+        String SID;
+        for(int i=0;i<12;i++)
+            for(int j=0;j<9;j++) {
+                SID="_"+i+""+j;
+                ID=getResources().getIdentifier(SID,"id",getPackageName());
+                board.gui[i][j] = findViewById(ID);
+            }
+
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (view.equals(up_btn)) {
+            execute_cmd(UP);
+        } else if (view.equals(left_btn)) {
+            execute_cmd(LEFT);
+        } else if (view.equals(right_btn)) {
+            execute_cmd(RIGHT);
+        } else if (view.equals(bottom_btn)) {
+            execute_cmd(BOTTOM);
+        }
+    }
+
+    public void show_map_in_cmd()
+    {
+        for (int i=0 ; i<12 ; i++)
+        {
+            for(int j =0 ; j<9 ; j++)
+            {
+                if (board.cells[i][j].has_pacman)
+                    System.out.print('p');
+                else if (board.cells[i][j].has_fruit)
+                    System.out.print('f');
+                else if (board.cells[i][j].has_sprint)
+                    System.out.print('S');
+                else if (board.cells[i][j].is_wall)
+                    System.out.print('w');
+                else
+                    System.out.print(" ");
+            }
+            System.out.println("");
+        }
+    }
+
+    private boolean can_go(int direction)
+    {
+        Cell target = null;
+        switch (direction)
+        {
+            case UP:
+                if (me.iPosition-1 >=0)
+                    target = board.cells[me.iPosition-1][me.jPosition];
+                break;
+            case RIGHT:
+                if (me.jPosition+1 <9)
+                    target = board.cells[me.iPosition][me.jPosition +1];
+                break;
+            case BOTTOM:
+                if (me.iPosition+1 <12)
+                    target = board.cells[me.iPosition+1][me.jPosition];
+                break;
+            case LEFT:
+                if (me.jPosition-1 >=0)
+                    target = board.cells[me.iPosition][me.jPosition-1];
+                break;
+        }
+
+        if (target == null)
+        {
+            return false;
+        }
+        else
+        {
+            if (target.is_wall)
+                return false;
+            if (target.isEmpty())
+                return true;
+            if (target.has_pacman || target.has_sprint)
+                return false;
+            return target.has_fruit;
+
+        }
+    }
+    private void execute_cmd(int direction)
+    {
+        switch (direction)
+        {
+            case UP:
+                if (can_go(direction)) {
+                    if (board.cells[me.iPosition - 1][me.jPosition].has_fruit) {
+                        me.score++;
+                        board.cells[me.iPosition - 1][me.jPosition].has_fruit = false;
+                    }
+                    //update logic
+                    board.cells[me.iPosition][me.jPosition].has_pacman = false;
+                    board.cells[me.iPosition - 1][me.jPosition].has_pacman = true;
+
+
+                    //update gui
+                    board.gui[me.iPosition][me.jPosition].setImageDrawable(null);
+                    board.gui[me.iPosition - 1][me.jPosition].setImageDrawable(getDrawable(R.drawable.pacman));
+                    board.gui[me.iPosition - 1][me.jPosition].setRotation(270);
+
+                    me.iPosition--;
+
+                }
+                break;
+            case RIGHT:
+                if (can_go(direction)) {
+                    if (board.cells[me.iPosition][me.jPosition + 1].has_fruit) {
+                        me.score++;
+                        board.cells[me.iPosition][me.jPosition + 1].has_fruit = false;
+                    }
+                    //update logic
+                    board.cells[me.iPosition][me.jPosition].has_pacman = false;
+                    board.cells[me.iPosition][me.jPosition + 1].has_pacman = true;
+
+
+                    //update gui
+                    board.gui[me.iPosition][me.jPosition].setImageDrawable(null);
+                    board.gui[me.iPosition][me.jPosition + 1].setImageDrawable(getDrawable(R.drawable.pacman));
+                    board.gui[me.iPosition][me.jPosition + 1].setRotation(0);
+
+                    me.jPosition++;
+
+
+                }
+                break;
+            case BOTTOM:
+                if (can_go(direction)) {
+                    if (board.cells[me.iPosition + 1][me.jPosition].has_fruit) {
+                        me.score++;
+                        board.cells[me.iPosition + 1][me.jPosition].has_fruit = false;
+                    }
+                    //update logic
+                    board.cells[me.iPosition][me.jPosition].has_pacman = false;
+                    board.cells[me.iPosition + 1][me.jPosition].has_pacman = true;
+
+
+                    //update gui
+                    board.gui[me.iPosition][me.jPosition].setImageDrawable(null);
+                    board.gui[me.iPosition + 1][me.jPosition].setImageDrawable(getDrawable(R.drawable.pacman));
+                    board.gui[me.iPosition + 1][me.jPosition].setRotation(90);
+
+                    me.iPosition++;
+
+                }
+                break;
+            case LEFT:
+                if (can_go(direction)) {
+                    if (board.cells[me.iPosition][me.jPosition - 1].has_fruit) {
+                        me.score++;
+                        board.cells[me.iPosition][me.jPosition - 1].has_fruit = false;
+                    }
+                    //update logic
+                    board.cells[me.iPosition][me.jPosition].has_pacman = false;
+                    board.cells[me.iPosition][me.jPosition - 1].has_pacman = true;
+
+
+                    //update gui
+                    board.gui[me.iPosition][me.jPosition].setImageDrawable(null);
+                    board.gui[me.iPosition][me.jPosition - 1].setImageDrawable(getDrawable(R.drawable.pacman));
+                    board.gui[me.iPosition][me.jPosition - 1].setRotation(180);
+
+                    me.jPosition--;
+
+                }
+                break;
+        }
+        update_score();
+    }
+}
