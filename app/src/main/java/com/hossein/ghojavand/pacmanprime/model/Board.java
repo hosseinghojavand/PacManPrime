@@ -1,15 +1,26 @@
 package com.hossein.ghojavand.pacmanprime.model;
 
+import android.content.Context;
 import android.widget.ImageView;
 
-import java.util.List;
+import androidx.core.content.ContextCompat;
 
-public class Board {
+import com.hossein.ghojavand.pacmanprime.MainActivity;
+import com.hossein.ghojavand.pacmanprime.R;
+
+import java.io.Serializable;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class Board implements Serializable {
     public Cell [][] cells;
     public ImageView[][] gui;
 
-    public Board()
+    private Context context;
+
+    public Board(Context context)
     {
+        this.context = context;
         cells = new Cell[12][9];
         gui = new ImageView[12][9];
 
@@ -52,6 +63,60 @@ public class Board {
 
             }
         }
+    }
+
+    public void refresh(byte[][] map)
+    {
+        ((MainActivity) context).runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                for (int i = 0 ; i < 12 ; i++)
+                {
+                    for(int j =0 ; j <9 ; j++) {
+                        if (map[i][j] == 0)
+                        {
+                            cells[i][j] = new Cell(false, false, false, false);
+                            gui[i][j].setImageDrawable(null);
+                        }
+                        if (map[i][j] == 1)
+                        {
+                            cells[i][j] = new Cell(true, false, false, false);
+                            gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.pacman));
+                            gui[i][j].setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.yellow), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        }
+                        if (map[i][j] == 2)
+                        {
+                            cells[i][j] = new Cell(true, false, false, false);
+                            gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.pacman));
+                            gui[i][j].setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.blue), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        }
+                        if (map[i][j] == 3)
+                        {
+                            cells[i][j] = new Cell(true, false, false, false);
+                            gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.pacman));
+                            gui[i][j].setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.red), android.graphics.PorterDuff.Mode.MULTIPLY);
+                        }
+                        else if(map[i][j] == 4)
+                        {
+                            cells[i][j] = new Cell(false, false, false, true);
+                            gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.sprint));
+                        }
+                        else if(map[i][j] == 5)
+                        {
+                            cells[i][j] = new Cell(false, false, true, false);
+                            //wall does not need to be loaded again
+                        }
+                        else if(map[i][j] == 6)
+                        {
+                            cells[i][j] = new Cell(false, true, false, false);
+                            gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.fruit));
+                        }
+                    }
+                }
+            }
+        });
+
+
     }
 }
 /*

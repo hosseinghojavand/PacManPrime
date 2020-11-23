@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg1"
+    android:orientation="vertical"
+    tools:context=".CreateGameActivity">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="با دوستانت به یک شبکه متصل بشید. بعدش دوستانت میتونن آدرس زیرو وارد کنن و به بازی اضافه بشن"
+        android:textSize="@dimen/_18sdp"
+        android:layout_gravity="center_horizontal"
+        android:textColor="@color/white"
+        android:textAlignment="center"
+        android:layout_margin="@dimen/_10sdp"/>
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:background="@drawable/curve_yellow"
+        android:layout_marginLeft="@dimen/_10sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        >
+        <TextView
+            android:id="@+id/ip_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="@dimen/_18sdp"
+            android:textColor="@color/black"
+            android:layout_centerInParent="true"/>
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/friends_list"
+        android:textSize="@dimen/_18sdp"
+        android:layout_gravity="right"
+        android:textColor="@color/white"
+        android:layout_margin="@dimen/_10sdp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/friends_rv"
+        android:layoutDirection="rtl"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_170sdp"
+        android:layout_margin="@dimen/_10sdp"/>
+
+
+    <Button
+        android:id="@+id/start_game_btn"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_10sdp"
+        android:background="@drawable/curve_yellow"
+        android:text="@string/start_game"
+        android:textSize="@dimen/_14sdp"
+        android:textColor="@color/black"/>
+
+
+</LinearLayout>

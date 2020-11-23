@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">PacMan prime</string>
     <string name="your_score">your score:</string>
+    <string name="create_game">ساخت بازی</string>
+    <string name="join_game">پیوستن به بازی</string>
+    <string name="friends_list">لیست دوستان</string>
+    <string name="error_while_running_server">خطا در راه اندازی سرور رخ داد</string>
+    <string name="start_game">شروع بازی</string>
+    <string name="join_game_btn">پیوستن به بازی</string>
 </resources>

@@ -3,6 +3,7 @@ package com.hossein.ghojavand.pacmanprime;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -13,17 +14,22 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.hossein.ghojavand.pacmanprime.adapters.ServerInterface;
 import com.hossein.ghojavand.pacmanprime.model.Board;
 import com.hossein.ghojavand.pacmanprime.model.Cell;
 import com.hossein.ghojavand.pacmanprime.model.PacMan;
+import com.hossein.ghojavand.pacmanprime.server.ClientHandler;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.util.logging.Level;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener , ServerInterface , Serializable {
 
 
     private LinearLayout board_layout;
@@ -34,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private PacMan me ;
     private Board board;
+
+    private GameManager gameManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,11 +57,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
 
+        Intent intent = getIntent();
+        if (intent.hasExtra("origin"))
+        {
+            if (intent.getStringExtra("origin").equals("CreateGameActivity"))
+            {
+                gameManager = CreateGameActivity.gameManager;
+            }
+            else if (intent.getStringExtra("origin").equals("JoinGameActivity"))
+            {
+                gameManager = JoinGameActivity.gameManager;
+            }
+        }
+
         init();
         up_btn.setOnClickListener(this);
         left_btn.setOnClickListener(this);
         right_btn.setOnClickListener(this);
         bottom_btn.setOnClickListener(this);
+
+
+        if (gameManager.current_device_mode == GameManager.SERVER) {
+            gameManager.set_server_interface(this);
+            gameManager.send_map_to_all_clients();
+        }
+
+
 
     }
 
@@ -64,12 +93,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottom_btn = findViewById(R.id.bottom_btn);
         my_score_tv = findViewById(R.id.my_score_tv);
 
-        me = new PacMan(11 , 0);
 
-        board = new Board();
+        switch (gameManager.my_id)
+        {
+            case 1:
+                me = new PacMan(11 , 0 , PacMan.YELLOW);
+                break;
+            case 2:
+                me = new PacMan(11 , 8 , PacMan.BLUE);
+                break;
+            case 3 :
+                me = new PacMan(0 , 8 , PacMan.RED);
+                break;
+        }
 
 
 
+
+        board = new Board(MainActivity.this);
 
         imageViewInitializer();
     }
@@ -253,4 +294,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
         update_score();
     }
+
+    @Override
+    public void notifyMapChanged(byte[][] map) {
+        board.refresh(map);
+    }
+
+    @Override
+    public void notifyClientConnected(ClientHandler client) {
+
+    }
+
+
 }

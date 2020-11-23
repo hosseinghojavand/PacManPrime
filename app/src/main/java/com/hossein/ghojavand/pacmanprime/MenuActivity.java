@@ -6,16 +6,21 @@ import androidx.core.content.ContextCompat;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.Menu;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 
-public class SplashScreen extends AppCompatActivity {
+
+public class MenuActivity extends AppCompatActivity {
+
+    private Button create_game_btn , join_game_btn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_splash_screen);
+        setContentView(R.layout.activity_menu);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             Window window = this.getWindow();
@@ -24,15 +29,30 @@ public class SplashScreen extends AppCompatActivity {
             window.setStatusBarColor(ContextCompat.getColor(this, R.color.background));
             window.setNavigationBarColor(ContextCompat.getColor(this, R.color.background));
         }
+        init();
 
-        Handler handler = new Handler();
-
-        handler.postDelayed(new Runnable() {
+        create_game_btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void run() {
-                startActivity(new Intent(SplashScreen.this , MenuActivity.class));
+            public void onClick(View view) {
+                startActivity(new Intent(MenuActivity.this , CreateGameActivity.class));
                 finish();
             }
-        },3000);
+        });
+
+
+        join_game_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MenuActivity.this , JoinGameActivity.class));
+                finish();
+            }
+        });
+
+
+    }
+
+    private void init() {
+        create_game_btn = findViewById(R.id.create_game_btn);
+        join_game_btn = findViewById(R.id.join_game_btn);
     }
 }

@@ -1,6 +1,8 @@
 package com.hossein.ghojavand.pacmanprime.model;
 
-public class Cell {
+import java.io.Serializable;
+
+public class Cell implements Serializable {
     public boolean has_pacman;
     public boolean has_fruit;
     public boolean is_wall;
