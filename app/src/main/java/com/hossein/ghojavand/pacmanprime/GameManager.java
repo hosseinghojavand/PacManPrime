@@ -216,16 +216,24 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         }
         if (length>0)
         {
-            int x = data[0];// &(0x80);
-            if(unsignedToBytes(data[0])==128)
+            if(getBit(data[0] , 8)==1)
             {
-                if (current_device_mode == CLIENT)
-                    context.startActivity(new Intent(context , MainActivity.class).putExtra("origin" , "JoinGameActivity"));
+                if (current_device_mode == CLIENT) {
+                    Intent intent = new Intent(context, MainActivity.class);
+                    intent.putExtra("origin", "JoinGameActivity");
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    context.startActivity(intent);
+                }
             }
         }
 
         if (serverInterface!=null && map!=null)
             serverInterface.notifyMapChanged(map);
+    }
+
+    public byte getBit(byte d , int position)
+    {
+        return (byte) ((d >> position) & 1);
     }
 
     @Override
