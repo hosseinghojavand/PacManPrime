@@ -3,7 +3,6 @@ package com.hossein.ghojavand.pacmanprime;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
-import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
@@ -14,13 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.Serializable;
-import java.util.IllegalFormatCodePointException;
-
 public class JoinGameActivity extends AppCompatActivity {
 
     private EditText ip_et;
-    private Button start_game_btn;
+    private Button join_game_btn;
 
     public static GameManager gameManager;
 
@@ -43,7 +39,7 @@ public class JoinGameActivity extends AppCompatActivity {
         init();
         gameManager = new GameManager(getApplicationContext() , GameManager.CLIENT);
 
-        start_game_btn.setOnClickListener(new View.OnClickListener() {
+        join_game_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (ip_et.getText().toString().trim().equals(""))
@@ -60,7 +56,7 @@ public class JoinGameActivity extends AppCompatActivity {
                         String ip = parts[0];
                         int port = Integer.parseInt(parts[1]);
                         if(gameManager.join_game(ip , port)) {
-                            start_game_btn.setEnabled(false);
+                            join_game_btn.setEnabled(false);
 
                             Toast.makeText(getApplicationContext(), "لطفا تا شروع بازی منتظر بمانید", Toast.LENGTH_LONG).show();
                         }
@@ -81,6 +77,6 @@ public class JoinGameActivity extends AppCompatActivity {
 
     private void init() {
         ip_et = findViewById(R.id.ip_et);
-        start_game_btn = findViewById(R.id.start_game_btn);
+        join_game_btn = findViewById(R.id.start_game_btn);
     }
 }

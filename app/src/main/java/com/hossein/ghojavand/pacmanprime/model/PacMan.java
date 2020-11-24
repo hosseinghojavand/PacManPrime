@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class PacMan  implements Serializable {
     public final static int RED = 1 , BLUE =2 , YELLOW = 3;
 
-    public int iPosition;
-    public int jPosition;
+    public int iPosition; // 0 - 11
+    public int jPosition; // 0 - 8
     public int score;
     public int color;
 

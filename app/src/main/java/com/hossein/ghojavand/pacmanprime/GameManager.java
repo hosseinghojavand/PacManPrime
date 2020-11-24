@@ -45,6 +45,8 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         this.context = context;
         this.current_device_mode = mode;
         init_server_map();
+
+
     }
 
     public void init_server_map()
@@ -201,7 +203,7 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
 
     @Override
     public void notifyDataReceived(byte[] data , int length) {
-
+        // data that is received by client
         byte [][] map = null;
         if (length>=110)
         {
