@@ -136,16 +136,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if (view.equals(up_btn)) {
-            execute_cmd(UP);
+            gameManager.request_for_move(UP) ;
+//            execute_cmd(UP);
         } else if (view.equals(left_btn)) {
-            execute_cmd(LEFT);
+            gameManager.request_for_move(LEFT) ;
+//            execute_cmd(LEFT);
         } else if (view.equals(right_btn)) {
-            execute_cmd(RIGHT);
+            gameManager.request_for_move(RIGHT) ;
+//            execute_cmd(RIGHT);
         } else if (view.equals(bottom_btn)) {
-            execute_cmd(BOTTOM);
+            gameManager.request_for_move(BOTTOM) ;
+//            execute_cmd(BOTTOM);
         }
     }
-
     public void show_map_in_cmd()
     {
         for (int i=0 ; i<12 ; i++)

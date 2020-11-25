@@ -1,5 +1,7 @@
 package com.hossein.ghojavand.pacmanprime.client;
 
+import android.util.Log;
+
 import com.hossein.ghojavand.pacmanprime.adapters.ClientInterface;
 
 import java.io.*;
@@ -24,16 +26,18 @@ public class Client {
             new Thread(serverConn).start();
     }
 
+
     public void make_request(byte [] request)
     {
         try {
             dout.write(request);
             dout.flush();
-        }catch (Exception ignored)
+        }catch (Exception e)
         {
-
+            Log.i("EXCEPTION", e.getMessage());
         }
     }
+
 
 
 

@@ -197,6 +197,17 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         server.send_to_all(request);
     }
 
+    public void request_for_move(int direction) {
+        byte [] request = new byte [2] ;
+
+        // byte #0 is for client id
+        request[0] = (byte) this.my_id ;
+
+        // byte #1 is for direction
+        request[1] = (byte) direction ;
+
+        client.make_request(request);
+    }
     private  int unsignedToBytes(byte b) {
         return b & 0xFF;
     }
@@ -236,6 +247,21 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
     public byte getBit(byte d , int position)
     {
         return (byte) ((d >> position) & 1);
+    }
+
+    public boolean is_game_over() {
+        // TODO is_game_ove func should be used for detecting whether game has been finished.
+        int sum_of_fruits = 0 ;
+        int sum_of_pacmans = 0 ;
+
+        for(int i= 0 ; i<12 ; i++) {
+            for(int j =0; j<9 ; j++) {
+                if(server_map[i][j]>=1 && server_map[i][j]<=3)  sum_of_pacmans ++ ;
+                else if(server_map[i][j]==6) sum_of_fruits++ ;
+            }
+        }
+
+        return sum_of_pacmans <= 1 || sum_of_fruits == 0;
     }
 
     @Override
