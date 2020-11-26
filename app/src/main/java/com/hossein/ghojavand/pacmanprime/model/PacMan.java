@@ -17,4 +17,6 @@ public class PacMan  implements Serializable {
         score = 0;
         this.color = color;
     }
+
+
 }

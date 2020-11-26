@@ -26,6 +26,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_40sdp"
             android:hint="192.168.1.1:9000"
+            android:text="192.168.1.54:9000"
             android:layout_margin="@dimen/_10sdp"
             android:paddingLeft="@dimen/_10sdp"
             android:background="@drawable/curve_yellow"/>

@@ -1,6 +1,7 @@
 package com.hossein.ghojavand.pacmanprime.model;
 
 import android.content.Context;
+import android.graphics.ImageDecoder;
 import android.widget.ImageView;
 
 import androidx.core.content.ContextCompat;
@@ -16,9 +17,9 @@ public class Board implements Serializable {
     public Cell [][] cells;
     public ImageView[][] gui;
 
-    private Context context;
+    private MainActivity context;
 
-    public Board(Context context)
+    public Board(MainActivity context)
     {
         this.context = context;
         cells = new Cell[12][9];
@@ -65,9 +66,9 @@ public class Board implements Serializable {
         }
     }
 
-    public void refresh(byte[][] map)
+    public void refresh(byte[][] map )
     {
-        ((MainActivity) context).runOnUiThread(new Runnable() {
+        context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 for (int i = 0 ; i < 12 ; i++)

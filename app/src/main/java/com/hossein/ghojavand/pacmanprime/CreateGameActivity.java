@@ -137,7 +137,7 @@ public class CreateGameActivity extends AppCompatActivity implements ServerInter
     }
 
     @Override
-    public void notifyMapChanged(byte[][] map) {
+    public void notifyMapChanged(byte[][] map , int score) {
 
     }
 

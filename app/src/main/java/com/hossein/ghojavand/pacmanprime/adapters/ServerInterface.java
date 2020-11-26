@@ -7,5 +7,5 @@ import java.io.Serializable;
 public interface ServerInterface extends Serializable {
     void notifyClientConnected(ClientHandler client);
 
-    void notifyMapChanged(byte[][] map);
+    void notifyMapChanged(byte[][] map , int score);
 }

@@ -11,18 +11,22 @@ import com.hossein.ghojavand.pacmanprime.adapters.ServerInterface;
 import com.hossein.ghojavand.pacmanprime.adapters.ServerRequestsInterface;
 import com.hossein.ghojavand.pacmanprime.client.Client;
 import com.hossein.ghojavand.pacmanprime.model.Device;
+import com.hossein.ghojavand.pacmanprime.model.PacMan;
 import com.hossein.ghojavand.pacmanprime.server.ClientHandler;
 import com.hossein.ghojavand.pacmanprime.server.Server;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GameManager implements ClientInterface , ServerRequestsInterface {
 
+    public static final int HAS_FRUIT = 6 , IS_WALL = 5 , EMPTY = 0 , HAS_SPRINT = 4;
+
     public static final int SERVER = 1 , CLIENT=2;
 
+
+    boolean is_startup = true;
 
     public byte[][] server_map = new byte[12][9];
 
@@ -35,6 +39,8 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
 
     public int my_id = 0;
 
+    public static int [] scores = new int[3];
+
 
     ServerInterface serverInterface;
 
@@ -46,6 +52,9 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         this.current_device_mode = mode;
         init_server_map();
 
+        scores[0] = 0;
+        scores[1] = 0;
+        scores[2] = 0;
 
     }
 
@@ -201,7 +210,7 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         byte [] request = new byte [2] ;
 
         // byte #0 is for client id
-        request[0] = (byte) this.my_id ;
+        request[0] = (byte) this.my_id;
 
         // byte #1 is for direction
         request[1] = (byte) direction ;
@@ -216,32 +225,43 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
     public void notifyDataReceived(byte[] data , int length) {
         // data that is received by client
         byte [][] map = null;
-        if (length>=110)
-        {
-            map = new byte[12][9];
-            for (int i = 2 ; i < 110 ; i++)
-            {
-                map[(i-2)/9][(i-2)%9] = data[i];
+
+        int score =0;
+        if (length>0) {
+            if (length >= 110) {
+                score = data[1];
+                map = new byte[12][9];
+                for (int i = 2; i < 110; i++) {
+                    map[(i - 2) / 9][(i - 2) % 9] = data[i];
+                }
+
+                show_map_in_cmd(map);
+
+                // set my own_id
+                my_id = data[110];
             }
 
-            // set my own_id
-            my_id = data[110];
-        }
-        if (length>0)
-        {
-            if(getBit(data[0] , 8)==1)
-            {
-                if (current_device_mode == CLIENT) {
+            if (getBit(data[0], 8) == 1) {
+                if (current_device_mode == CLIENT && is_startup) {
+                    is_startup = false;
                     Intent intent = new Intent(context, MainActivity.class);
                     intent.putExtra("origin", "JoinGameActivity");
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
+
                 }
             }
         }
 
         if (serverInterface!=null && map!=null)
-            serverInterface.notifyMapChanged(map);
+            serverInterface.notifyMapChanged(map , score);
+        else
+        {
+            if (serverInterface == null)
+                System.out.println("error11 ---------------");
+            else
+                System.out.println("error22 ---------------");
+        }
     }
 
     public byte getBit(byte d , int position)
@@ -250,7 +270,6 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
     }
 
     public boolean is_game_over() {
-        // TODO is_game_ove func should be used for detecting whether game has been finished.
         int sum_of_fruits = 0 ;
         int sum_of_pacmans = 0 ;
 
@@ -264,9 +283,141 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         return sum_of_pacmans <= 1 || sum_of_fruits == 0;
     }
 
+    private boolean can_go(int direction , PacMan pacMan)
+    {
+         byte target = 127;
+        switch (direction)
+        {
+            case MainActivity.UP:
+                if (pacMan.iPosition-1 >=0)
+                    target = server_map[pacMan.iPosition-1][pacMan.jPosition];
+                break;
+            case MainActivity.RIGHT:
+                if (pacMan.jPosition+1 <9)
+                    target = server_map[pacMan.iPosition][pacMan.jPosition +1];
+                break;
+            case MainActivity.BOTTOM:
+                if (pacMan.iPosition+1 <12)
+                    target = server_map[pacMan.iPosition+1][pacMan.jPosition];
+                break;
+            case MainActivity.LEFT:
+                if (pacMan.jPosition-1 >=0)
+                    target = server_map[pacMan.iPosition][pacMan.jPosition-1];
+                break;
+        }
+
+        return target == EMPTY || target == HAS_FRUIT;
+
+    }
+
+    public void show_map_in_cmd(byte[][] map)
+    {
+        for (int i=0 ; i<12 ; i++)
+        {
+            for(int j =0 ; j<9 ; j++)
+            {
+
+                if (map[i][j] == HAS_FRUIT)
+                    System.out.print('f');
+                else if (map[i][j] == HAS_SPRINT)
+                    System.out.print('S');
+                else if (map[i][j] == IS_WALL)
+                    System.out.print('w');
+                else
+                    System.out.print(map[i][j]);
+            }
+            System.out.println("");
+        }
+    }
     @Override
     public void onRequestReceived(ClientHandler client , byte[] request , int length) {
-        // all request that comes from clients will be directed to here
+
+        if (length ==2)
+        {
+            int client_id = request[0];
+            int direction = request[1];
+
+            System.out.println("request received from: " + client_id + " ,direction = " + direction);
+
+            PacMan me = null;
+            for (int i = 0 ; i < 12 ; i++)
+            {
+                for (int j = 0 ; j < 9 ; j++)
+                {
+                    if (server_map[i][j] == client_id)
+                        me = new PacMan(i , j ,client_id);
+                }
+            }
+
+            if (me!=null)
+            {
+                if (can_go(direction , me)) {
+                    switch (direction) {
+                        case MainActivity.UP:
+                            if (server_map[me.iPosition - 1][me.jPosition] == HAS_FRUIT) {
+                                scores[client_id - 1]++;
+                            }
+                            //update logic
+                            server_map[me.iPosition][me.jPosition] = EMPTY;
+                            server_map[me.iPosition - 1][me.jPosition] = (byte) client_id;
+                            send_map_to_all_clients();
+
+
+                            break;
+                        case MainActivity.RIGHT:
+
+                            if (server_map[me.iPosition][me.jPosition + 1] == HAS_FRUIT) {
+                                scores[client_id - 1]++;
+                            }
+                            //update logic
+                            server_map[me.iPosition][me.jPosition] = EMPTY;
+                            server_map[me.iPosition][me.jPosition + 1] = (byte) client_id;
+                            send_map_to_all_clients();
+
+                            break;
+                        case MainActivity.BOTTOM:
+
+                            if (server_map[me.iPosition + 1][me.jPosition] == HAS_FRUIT) {
+                                scores[client_id - 1]++;
+                            }
+                            //update logic
+                            server_map[me.iPosition][me.jPosition] = EMPTY;
+                            server_map[me.iPosition + 1][me.jPosition] = (byte) client_id;
+                            send_map_to_all_clients();
+
+                            break;
+                        case MainActivity.LEFT:
+
+                            if (server_map[me.iPosition][me.jPosition - 1] == HAS_FRUIT) {
+                                scores[client_id - 1]++;
+                            }
+                            //update logic
+                            server_map[me.iPosition][me.jPosition] = EMPTY;
+                            server_map[me.iPosition][me.jPosition - 1] = (byte) client_id;
+                            send_map_to_all_clients();
+                            break;
+                    }
+                    if (is_game_over())
+                    {
+                        tell_clients_game_ended();
+                    }
+                }
+                else
+                    System.out.println("can not go");
+            }
+        }
+
+    }
+
+    public void tell_clients_game_ended()
+    {
+        byte [] request = new byte[4];
+
+        request[0] = 0;
+
+        request[1] =(byte) scores[0];
+        request[2] =(byte) scores[1];
+        request[3] =(byte) scores[2];
     }
 
 

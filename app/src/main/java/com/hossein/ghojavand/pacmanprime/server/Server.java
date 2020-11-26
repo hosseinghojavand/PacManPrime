@@ -13,6 +13,8 @@ import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.hossein.ghojavand.pacmanprime.GameManager.scores;
+
 public class Server implements Serializable {
 
     private boolean is_server_on = true;
@@ -49,6 +51,7 @@ public class Server implements Serializable {
             try {
                 if (request.length ==111)
                 {
+                    request[1] = (byte) scores[i-1];
                     request[110] = (byte) i;
                     i++;
                 }

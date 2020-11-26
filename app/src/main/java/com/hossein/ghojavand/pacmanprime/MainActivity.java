@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RelativeLayout up_btn , left_btn , right_btn , bottom_btn;
     private TextView my_score_tv;
 
-    private final int UP = 1 , RIGHT = 2 , BOTTOM = 3 , LEFT = 4;
+    public static final int UP = 1 , RIGHT = 2 , BOTTOM = 3 , LEFT = 4;
 
     private PacMan me ;
     private Board board;
@@ -77,8 +77,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bottom_btn.setOnClickListener(this);
 
 
+        gameManager.set_server_interface(this);
+
         if (gameManager.current_device_mode == GameManager.SERVER) {
-            gameManager.set_server_interface(this);
             gameManager.send_map_to_all_clients();
         }
 
@@ -170,46 +171,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean can_go(int direction)
-    {
-        Cell target = null;
-        switch (direction)
-        {
-            case UP:
-                if (me.iPosition-1 >=0)
-                    target = board.cells[me.iPosition-1][me.jPosition];
-                break;
-            case RIGHT:
-                if (me.jPosition+1 <9)
-                    target = board.cells[me.iPosition][me.jPosition +1];
-                break;
-            case BOTTOM:
-                if (me.iPosition+1 <12)
-                    target = board.cells[me.iPosition+1][me.jPosition];
-                break;
-            case LEFT:
-                if (me.jPosition-1 >=0)
-                    target = board.cells[me.iPosition][me.jPosition-1];
-                break;
-        }
 
-        if (target == null)
-        {
-            return false;
-        }
-        else
-        {
-            if (target.is_wall)
-                return false;
-            if (target.isEmpty())
-                return true;
-            if (target.has_pacman || target.has_sprint)
-                return false;
-            return target.has_fruit;
-
-        }
-    }
-    private void execute_cmd(int direction)
+    /*private void execute_cmd(int direction)
     {
         switch (direction)
         {
@@ -296,10 +259,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
         update_score();
-    }
+    }*/
 
     @Override
-    public void notifyMapChanged(byte[][] map) {
+    public void notifyMapChanged(byte[][] map , int score) {
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                String s = String.valueOf(score);
+                my_score_tv.setText(s);
+            }
+        });
+
         board.refresh(map);
     }
 
