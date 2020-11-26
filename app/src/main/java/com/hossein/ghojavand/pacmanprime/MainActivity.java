@@ -3,6 +3,7 @@ package com.hossein.ghojavand.pacmanprime;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomappbar.BottomAppBar;
+import com.hossein.ghojavand.pacmanprime.GraphicalViews.EndGameDialog;
 import com.hossein.ghojavand.pacmanprime.adapters.ServerInterface;
 import com.hossein.ghojavand.pacmanprime.model.Board;
 import com.hossein.ghojavand.pacmanprime.model.Cell;
@@ -26,6 +28,7 @@ import com.hossein.ghojavand.pacmanprime.server.ClientHandler;
 import org.w3c.dom.Text;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.logging.Level;
 
 
@@ -281,4 +284,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    public void handle_end_game(ArrayList<Integer> ranks) {
+        EndGameDialog dialog = new EndGameDialog(MainActivity.this) ;
+        dialog.setCancelable(false);
+        dialog.show();
+    }
 }

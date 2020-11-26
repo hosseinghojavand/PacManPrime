@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/_16sdp"
+    android:orientation="vertical"
+    android:background="@drawable/gray_solid_black_round_border"
+    android:layoutDirection="ltr">
+
+    <TextView
+        android:id="@+id/end_game_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:text="بازیکن زرد برنده شد"
+        android:textColor="@color/black"
+        android:layout_gravity="center"
+        android:textSize="@dimen/_19sdp"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_190sdp"
+        android:gravity="center_vertical"
+        android:paddingTop="@dimen/_2sdp"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:padding="@dimen/_4sdp"
+            android:background="@drawable/white_solid_black_round_border"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/third_place_iv"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/pacman"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="@dimen/_17sdp"
+                android:text="امتیاز"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/third_place_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="l2"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17sdp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:padding="@dimen/_4sdp"
+            android:background="@drawable/white_solid_black_round_border"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/first_place_iv"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/pacman"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="امتیاز"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_14sdp" />
+            <TextView
+                android:id="@+id/first_place_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="21"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17sdp"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_4sdp"
+            android:layout_marginRight="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_4sdp"
+            android:padding="@dimen/_4sdp"
+            android:background="@drawable/white_solid_black_round_border"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:orientation="vertical">
+            <ImageView
+                android:id="@+id/second_place_iv"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_gravity="center"
+                android:src="@drawable/pacman"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textSize="@dimen/_14sdp"
+                android:text="امتیاز"
+                android:textColor="@color/black"/>
+            <TextView
+                android:id="@+id/second_place_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="21"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_17sdp"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/end_game_exit_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/violate_solid_rounded_border"
+        android:layout_gravity="center"
+        android:textSize="@dimen/_17sdp"
+        android:textColor="@color/white"
+        android:text="خروج"
+        />
+</LinearLayout>
