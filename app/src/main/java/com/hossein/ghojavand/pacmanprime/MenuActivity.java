@@ -14,6 +14,8 @@ import android.widget.Button;
 
 import com.hossein.ghojavand.pacmanprime.GraphicalViews.EndGameDialog;
 
+import java.util.ArrayList;
+
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -36,13 +38,8 @@ public class MenuActivity extends AppCompatActivity {
         create_game_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                EndGameDialog dialog = new EndGameDialog(MenuActivity.this) ;
-                dialog.setCancelable(false);
-                dialog.show();
-                Window window = dialog.getWindow();
-                window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
-//                startActivity(new Intent(MenuActivity.this , CreateGameActivity.class));
-//                finish();
+                startActivity(new Intent(MenuActivity.this , CreateGameActivity.class));
+                finish();
             }
         });
 

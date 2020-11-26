@@ -285,8 +285,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public void handle_end_game(ArrayList<Integer> ranks) {
-        EndGameDialog dialog = new EndGameDialog(MainActivity.this) ;
+        // TODO function for handling end game
+        /*
+        first element is for yellow
+        second element is for blue
+        third element is for red
+         */
+        EndGameDialog dialog = new EndGameDialog(MainActivity.this , ranks) ;
         dialog.setCancelable(false);
         dialog.show();
+        Window window = dialog.getWindow();
+        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
     }
 }
