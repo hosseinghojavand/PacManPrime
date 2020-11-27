@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.INotificationSideChannel;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -38,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout board_layout;
     private RelativeLayout up_btn , left_btn , right_btn , bottom_btn;
     private TextView my_score_tv;
+    private ImageView pacman_iv;
 
     public static final int UP = 1 , RIGHT = 2 , BOTTOM = 3 , LEFT = 4;
 
@@ -66,11 +68,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (intent.getStringExtra("origin").equals("CreateGameActivity"))
             {
                 gameManager = CreateGameActivity.gameManager;
+
             }
             else if (intent.getStringExtra("origin").equals("JoinGameActivity"))
             {
                 gameManager = JoinGameActivity.gameManager;
             }
+
+
         }
 
         init();
@@ -96,18 +101,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         right_btn = findViewById(R.id.right_btn);
         bottom_btn = findViewById(R.id.bottom_btn);
         my_score_tv = findViewById(R.id.my_score_tv);
+        pacman_iv = findViewById(R.id.pacman_iv);
 
 
         switch (gameManager.my_id)
         {
-            case 1:
+            case PacMan.YELLOW:
                 me = new PacMan(11 , 0 , PacMan.YELLOW);
+                pacman_iv.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.yellow));
                 break;
-            case 2:
+            case PacMan.BLUE:
                 me = new PacMan(11 , 8 , PacMan.BLUE);
+                pacman_iv.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.blue));
                 break;
-            case 3 :
+            case PacMan.RED:
                 me = new PacMan(0 , 8 , PacMan.RED);
+                pacman_iv.setColorFilter(ContextCompat.getColor(getApplicationContext(), R.color.red));
                 break;
         }
 
@@ -265,7 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }*/
 
     @Override
-    public void notifyMapChanged(byte[][] map , int score) {
+    public void onMapChanged(byte[][] map , int score) {
 
         runOnUiThread(new Runnable() {
             @Override
@@ -279,7 +288,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void notifyClientConnected(ClientHandler client) {
+    public void onGameEnded(byte[] data) {
+        ArrayList<Integer> scores = new ArrayList<>();
+        scores.add(Integer.valueOf(data[1]));
+        scores.add(Integer.valueOf(data[2]));
+        scores.add(Integer.valueOf(data[3]));
+        handle_end_game(scores);
+    }
+
+    @Override
+    public void onClientConnected(ClientHandler client) {
 
     }
 
@@ -291,10 +309,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         second element is for blue
         third element is for red
          */
-        EndGameDialog dialog = new EndGameDialog(MainActivity.this , ranks) ;
-        dialog.setCancelable(false);
-        dialog.show();
-        Window window = dialog.getWindow();
-        window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                EndGameDialog dialog = new EndGameDialog(MainActivity.this , ranks) ;
+                dialog.setCancelable(false);
+                dialog.show();
+                Window window = dialog.getWindow();
+                window.setLayout(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.WRAP_CONTENT);
+            }
+        });
+
     }
 }

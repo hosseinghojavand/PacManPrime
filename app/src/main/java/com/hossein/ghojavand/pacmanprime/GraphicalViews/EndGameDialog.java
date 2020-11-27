@@ -85,16 +85,16 @@ public class EndGameDialog extends Dialog implements android.view.View.OnClickLi
                 first_place_captured = true ;
                 title.setText(record.first.second);
                 first_place_tv.setText(""+record.first.first);
-                first_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second), android.graphics.PorterDuff.Mode.MULTIPLY);
+                first_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second));
             }
             else if ( record.first.first == min && !third_place_captured)  {
                 third_place_captured = true ;
                 third_place_tv.setText(""+record.first.first);
-                third_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second), android.graphics.PorterDuff.Mode.MULTIPLY);
+                third_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second));
             }
             else {
                 second_place_tv.setText(""+record.first.first);
-                second_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second), android.graphics.PorterDuff.Mode.MULTIPLY);
+                second_place_iv.setColorFilter(ContextCompat.getColor(this.activity,record.second));
             }
         }
     }

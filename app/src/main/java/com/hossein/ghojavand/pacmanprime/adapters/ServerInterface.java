@@ -5,7 +5,9 @@ import com.hossein.ghojavand.pacmanprime.server.ClientHandler;
 import java.io.Serializable;
 
 public interface ServerInterface extends Serializable {
-    void notifyClientConnected(ClientHandler client);
+    void onClientConnected(ClientHandler client);
 
-    void notifyMapChanged(byte[][] map , int score);
+    void onMapChanged(byte[][] map , int score);
+
+    void onGameEnded(byte [] data);
 }

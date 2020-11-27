@@ -10,10 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hossein.ghojavand.pacmanprime.R;
 import com.hossein.ghojavand.pacmanprime.model.Device;
+import com.hossein.ghojavand.pacmanprime.model.PacMan;
 
 import java.io.Serializable;
 import java.net.URL;
@@ -43,6 +45,18 @@ public class ConnectedDevicesAdapter extends RecyclerView.Adapter<RecyclerView.V
         String s =String.valueOf(devices.get(position).id);
         myViewHolder.name_tv.setText(s);
 
+        switch (devices.get(position).color)
+        {
+            case PacMan.RED:
+                myViewHolder.packman_iv.setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.red));
+                break;
+            case PacMan.BLUE:
+                myViewHolder.packman_iv.setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.blue));
+                break;
+            case PacMan.YELLOW:
+                myViewHolder.packman_iv.setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.yellow));
+                break;
+        }
     }
 
     @Override
@@ -54,9 +68,12 @@ public class ConnectedDevicesAdapter extends RecyclerView.Adapter<RecyclerView.V
     public class ItemViewHolder extends RecyclerView.ViewHolder implements Serializable {
 
         TextView name_tv ;
+        ImageView packman_iv;
+
         public ItemViewHolder(@NonNull View itemView) {
             super(itemView);
             name_tv = itemView.findViewById(R.id.name_tv);
+            packman_iv = itemView.findViewById(R.id.packman_iv);
         }
     }
 

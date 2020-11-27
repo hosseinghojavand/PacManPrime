@@ -122,9 +122,9 @@ public class CreateGameActivity extends AppCompatActivity implements ServerInter
     }
 
     @Override
-    public void notifyClientConnected(ClientHandler client) {
+    public void onClientConnected(ClientHandler client) {
 
-        devices.add(new Device(devices.size()+1 , client));
+        devices.add(new Device(devices.size()+1 , client , devices.size()+1));
 
         runOnUiThread(new Runnable() {
             @Override
@@ -137,7 +137,12 @@ public class CreateGameActivity extends AppCompatActivity implements ServerInter
     }
 
     @Override
-    public void notifyMapChanged(byte[][] map , int score) {
+    public void onMapChanged(byte[][] map , int score) {
+
+    }
+
+    @Override
+    public void onGameEnded(byte[] data) {
 
     }
 

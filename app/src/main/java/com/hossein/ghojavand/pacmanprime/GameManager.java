@@ -222,7 +222,7 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
     }
 
     @Override
-    public void notifyDataReceived(byte[] data , int length) {
+    public void onClientDataReceived(byte[] data , int length) {
         // data that is received by client
         byte [][] map = null;
 
@@ -241,6 +241,12 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
                 my_id = data[110];
             }
 
+            if (length==4)
+            {
+                if (data[0] == 0)
+                    serverInterface.onGameEnded(data);
+            }
+
             if (getBit(data[0], 8) == 1) {
                 if (current_device_mode == CLIENT && is_startup) {
                     is_startup = false;
@@ -254,7 +260,7 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         }
 
         if (serverInterface!=null && map!=null)
-            serverInterface.notifyMapChanged(map , score);
+            serverInterface.onMapChanged(map , score);
         else
         {
             if (serverInterface == null)
@@ -270,7 +276,7 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
     }
 
     public boolean is_game_over() {
-        int sum_of_fruits = 0 ;
+        /*int sum_of_fruits = 0 ;
         int sum_of_pacmans = 0 ;
 
         for(int i= 0 ; i<12 ; i++) {
@@ -280,7 +286,9 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
             }
         }
 
-        return sum_of_pacmans <= 1 || sum_of_fruits == 0;
+        return sum_of_pacmans <= 1 || sum_of_fruits == 0;*/
+
+        return (scores[0] + scores[1] + scores[2] == 69);
     }
 
     private boolean can_go(int direction , PacMan pacMan)
@@ -418,6 +426,8 @@ public class GameManager implements ClientInterface , ServerRequestsInterface {
         request[1] =(byte) scores[0];
         request[2] =(byte) scores[1];
         request[3] =(byte) scores[2];
+
+        server.send_to_all(request);
     }
 
 

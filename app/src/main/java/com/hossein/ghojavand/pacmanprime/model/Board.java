@@ -89,7 +89,7 @@ public class Board implements Serializable {
                         {
                             cells[i][j] = new Cell(true, false, false, false);
                             gui[i][j].setImageDrawable(context.getApplicationContext().getDrawable(R.drawable.pacman));
-                            gui[i][j].setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.blue), android.graphics.PorterDuff.Mode.MULTIPLY);
+                            gui[i][j].setColorFilter(ContextCompat.getColor(context.getApplicationContext(), R.color.blue));
                         }
                         if (map[i][j] == 3)
                         {

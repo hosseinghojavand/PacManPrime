@@ -81,7 +81,7 @@ public class Server implements Serializable {
                     pool.execute(clientThread);
 
 
-                    serverInterface.notifyClientConnected(clientThread);
+                    serverInterface.onClientConnected(clientThread);
                 } catch (IOException ignored) {
 
                 }

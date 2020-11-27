@@ -29,7 +29,7 @@ public class ServerConnection  implements Runnable , Serializable{
                 int count = dis.read(data);
 
 
-                clientInterface.notifyDataReceived(data , count);
+                clientInterface.onClientDataReceived(data , count);
 
             }
         } catch (IOException e) {
